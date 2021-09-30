@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jmetermicro
+  labels:
+    app: jmetermicro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jmetermicro
+  template:
+    metadata:
+      labels:
+        app: jmetermicro
+    spec:
+      containers:
+        - name: jmeter
+          #image: emanelsabban/acmeair-microsvc:jmeterDebugMode
+          image: emanelsabban/acmeair-microsvc:jmeterdebugmode2
+          env:
+          - name: JTHREAD
+            value: "48"
+          - name: JDURATION
+            value: "300"
+          - name: LIBERTYHOST
+            value: "acmeair-main-service"
+          - name: JHOST
+            value: "acmeair-main-service"
+          - name: JURL
+            value: "/acmeair"
+          - name: JPORT
+            value: "9080"
+          imagePullPolicy: IfNotPresent
+          resources: 
+            requests:
+              cpu: 500m
+              memory: 500Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          securityContext:
+            runAsUser: 0
+      #nodeName: {{ .Values.nodeName }}
+      nodeSelector:
+        chosen: "true"
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+   
+

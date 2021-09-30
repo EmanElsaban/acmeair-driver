@@ -32,7 +32,7 @@ RUN echo 'CookieManager.save.cookies=true' >> $JMETER_HOME/bin/jmeter.properties
 RUN echo 'summariser.interval=6' >> $JMETER_HOME/bin/jmeter.properties
 
 # Copy the script to be executed and other needed files
-COPY acmeair-jmeter/scripts/AcmeAir-microservices.jmx $JMETER_HOME/AcmeAir-microservices.jmx
+COPY acmeair-jmeter/scripts/AcmeAir-microservices-mpJwt.jmx $JMETER_HOME/AcmeAir-microservices-mpJwt.jmx
 COPY acmeair-jmeter/scripts/Airports.csv $JMETER_HOME/Airports.csv
 COPY acmeair-jmeter/scripts/Airports2.csv $JMETER_HOME/Airports2.csv
 COPY acmeair-jmeter/scripts/hosts.csv $JMETER_HOME/hosts.csv
@@ -42,7 +42,7 @@ COPY acmeair-jmeter/scripts/applyLoad.sh $JMETER_HOME/bin/applyLoad.sh
 RUN chmod u+x $JMETER_HOME/bin/applyLoad.sh
 
 # Adjust the host this is going to connect to based on an environment variable
-ENV LIBERTYHOST acmeair.apps.hurricanes.os.fyre.ibm.com
+ENV LIBERTYHOST acmeair.apps.jitserver.xmaq.p1.openshiftapps.com
 
 # Environment variables that we want the user to redefine
 ENV JPORT 9080
@@ -51,5 +51,7 @@ ENV JUSER 199
 ENV JURL acmeair
 ENV JTHREAD 15
 ENV JDURATION=60
+ENV JRAMP 0
+ENV JTHINKTIME=0
 
 ENTRYPOINT ["applyLoad.sh"]
